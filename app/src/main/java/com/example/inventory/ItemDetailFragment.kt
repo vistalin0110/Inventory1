@@ -58,11 +58,9 @@ class ItemDetailFragment : Fragment() {
      */
     private fun bind(item: Item) {
         binding.apply {
-            itemName.text = item.english
-            itemPrice.text = item.chinese
-            itemCount.text = item.isFavorite.toString()
-            sellItem.isEnabled = viewModel.isStockAvailable(item)
-            sellItem.setOnClickListener { viewModel.sellItem(item) }
+            itemCountry.text = item.Country
+            itemCapital.text = item.Capital
+
             deleteItem.setOnClickListener { showConfirmationDialog() }
             editItem.setOnClickListener { editItem() }
         }

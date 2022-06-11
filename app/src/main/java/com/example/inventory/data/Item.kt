@@ -19,11 +19,9 @@ import android.content.ContentValues
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.text.NumberFormat
-import com.example.inventory.MainActivity.Companion.ITEM_FAV
-import com.example.inventory.MainActivity.Companion.ITEM_CHN
+import com.example.inventory.MainActivity.Companion.ITEM_CAPITAL
 import com.example.inventory.MainActivity.Companion.ITEM_ID
-import com.example.inventory.MainActivity.Companion.ITEM_ENG
+import com.example.inventory.MainActivity.Companion.ITEM_COUNTRY
 
 /**
  * Entity data class represents a single row in the database.
@@ -32,12 +30,10 @@ import com.example.inventory.MainActivity.Companion.ITEM_ENG
 data class Item(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-    @ColumnInfo(name = "english")
-    var english: String="",
-    @ColumnInfo(name = "chinese")
-    var chinese: String="",
-    @ColumnInfo(name = "isFavorite")
-    var isFavorite: Int=0,
+    @ColumnInfo(name = "Country")
+    var Country: String="",
+    @ColumnInfo(name = "Capital")
+    var Capital: String="",
 
     ) {
 
@@ -46,12 +42,10 @@ data class Item(
             var item = Item()
             if (contentValues.containsKey(ITEM_ID)) {
                 item.id = contentValues.getAsInteger(ITEM_ID)
-            } else if (contentValues.containsKey(ITEM_ENG)) {
-                item.english = contentValues.getAsString(ITEM_ENG)
-            } else if (contentValues.containsKey(ITEM_CHN)) {
-                item.chinese = contentValues.getAsString(ITEM_CHN)
-            } else if (contentValues.containsKey(ITEM_FAV)) {
-                item.isFavorite = contentValues.getAsInteger(ITEM_FAV)
+            } else if (contentValues.containsKey(ITEM_COUNTRY)) {
+                item.Country = contentValues.getAsString(ITEM_COUNTRY)
+            } else if (contentValues.containsKey(ITEM_CAPITAL)) {
+                item.Capital = contentValues.getAsString(ITEM_CAPITAL)
             }
             return item
         }

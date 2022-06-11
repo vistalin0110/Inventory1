@@ -14,23 +14,18 @@
   ~ limitations under the License.
   -->
 <resources>
-    <string name="app_name">Vocabulary List</string>
+    <string name="app_name">Country List</string>
     <string name="sell">Sell</string>
     <string name="button">NOTIFICATION!</string>
     <string name="button2">LOCATION!</string>
-    <string name="quantity">Is Favorite? (0=No,1=Yes):</string>
-    <string name="quantity_req">Is Favorite Or Not <font color='#FF0000'>*</font></string>
-    <string name="eng_req">English <font color='#FF0000'>*</font></string>
-    <string name="chn_req">Chinese <font color='#FF0000'>*</font></string>
-    <string name="fav_req">Favorite setting (0=No,1=Yes) <font color='#FF0000'>*</font></string>
+    <string name="con_req">Country <font color='#FF0000'>*</font></string>
+    <string name="cap_req">Capital <font color='#FF0000'>*</font></string>
+    <string name="con">Country</string>
+    <string name="cap">Capital</string>
     <string name="save_action">Save</string>
     <string name="item_detail_fragment_title">Vocabulary Details</string>
     <string name="add_fragment_title">Add New Word</string>
     <string name="edit_fragment_title">Edit Item</string>
-    <string name="price">Price</string>
-    <string name="fav">Favorite</string>
-    <string name="chn">Chinese</string>
-    <string name="eng">English</string>
     <string name="delete">Delete</string>
     <string name="delete_question">Are you sure you want to delete?</string>
     <string name="no">No</string>

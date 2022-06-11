@@ -39,9 +39,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     companion object {
         var ITEM_ID = "id"
-        var ITEM_ENG = "english"
-        var ITEM_CHN = "chinese"
-        var ITEM_FAV = "favorite"
+        var ITEM_COUNTRY = "Country"
+        var ITEM_CAPITAL = "Capital"
     }
 
     private lateinit var navController: NavController
@@ -86,7 +85,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     internal fun sendNotification(){
         val builder =NotificationCompat.Builder(this, channel_id)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentText("Example")
+            .setContentText("You get a notification!")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         with(NotificationManagerCompat.from(this)){

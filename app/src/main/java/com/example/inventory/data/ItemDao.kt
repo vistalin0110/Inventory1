@@ -30,14 +30,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ItemDao {
 
-    @Query("SELECT * from item ORDER BY english ASC")
+    @Query("SELECT * from item ORDER BY Country ASC")
     fun getItems(): Flow<List<Item>>
 
     @Query("SELECT * from item WHERE id = :id")
     fun getItem(id: Int): Flow<Item>
 
-    @Query("SELECT * from item where isFavorite = 1 ORDER BY english ASC")
-    fun getFavItems(): Flow<List<Item>>
 
     // Specify the conflict strategy as IGNORE, when the user tries to add an
     // existing Item into the database Room ignores the conflict.

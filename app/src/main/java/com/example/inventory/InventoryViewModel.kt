@@ -33,24 +33,20 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
 
     // Cache all items form the database using LiveData.
     val allItems: LiveData<List<Item>> = itemDao.getItems().asLiveData()
-    val favItems: LiveData<List<Item>> = itemDao.getFavItems().asLiveData()
+
     /**
      * Returns true if isFavorite is available to sell, false otherwise.
      */
-    fun isStockAvailable(item: Item): Boolean {
-        return (item.isFavorite > 0)
-    }
 
     /**
      * Updates an existing Item in the database.
      */
     fun updateItem(
         itemId: Int,
-        itemName: String,
-        itemPrice: String,
-        itemCount: String
+        itemCountry: String,
+        itemCapital: String
     ) {
-        val updatedItem = getUpdatedItemEntry(itemId, itemName, itemPrice, itemCount)
+        val updatedItem = getUpdatedItemEntry(itemId, itemCountry, itemCapital)
         updateItem(updatedItem)
     }
 
@@ -67,19 +63,12 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
     /**
      * Decreases the isFavorite by one unit and updates the database.
      */
-    fun sellItem(item: Item) {
-        if (item.isFavorite > 0) {
-            // Decrease the quantity by 1
-            val newItem = item.copy(isFavorite = item.isFavorite - 1)
-            updateItem(newItem)
-        }
-    }
 
     /**
      * Inserts the new Item into database.
      */
-    fun addNewItem(itemName: String, itemPrice: String, itemCount: String) {
-        val newItem = getNewItemEntry(itemName, itemPrice, itemCount)
+    fun addNewItem(itemCountry: String, itemCapital: String) {
+        val newItem = getNewItemEntry(itemCountry, itemCapital)
         insertItem(newItem)
     }
 
@@ -111,8 +100,8 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
     /**
      * Returns true if the EditTexts are not empty
      */
-    fun isEntryValid(itemName: String, itemPrice: String, itemCount: String): Boolean {
-        if (itemName.isBlank() || itemPrice.isBlank() || itemCount.isBlank()) {
+    fun isEntryValid(itemCountry: String, itemCapital: String): Boolean {
+        if (itemCountry.isBlank() || itemCapital.isBlank()) {
             return false
         }
         return true
@@ -122,11 +111,11 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
      * Returns an instance of the [Item] entity class with the item info entered by the user.
      * This will be used to add a new entry to the Inventory database.
      */
-    private fun getNewItemEntry(itemName: String, itemPrice: String, itemCount: String): Item {
+    private fun getNewItemEntry(itemCountry: String, itemCapital: String): Item {
         return Item(
-            english = itemName,
-            chinese = itemPrice,
-            isFavorite = itemCount.toInt()
+            Country = itemCountry,
+            Capital = itemCapital,
+
         )
     }
 
@@ -136,15 +125,13 @@ class InventoryViewModel(private val itemDao: ItemDao) : ViewModel() {
      */
     private fun getUpdatedItemEntry(
         itemId: Int,
-        itemName: String,
-        itemPrice: String,
-        itemCount: String
+        itemCountry: String,
+        itemCapital: String,
     ): Item {
         return Item(
             id = itemId,
-            english = itemName,
-            chinese = itemPrice,
-            isFavorite =  itemCount.toInt()
+            Country = itemCountry,
+            Capital = itemCapital
         )
     }
 }

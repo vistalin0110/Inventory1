@@ -52,9 +52,8 @@ class ItemListAdapter(private val onItemClicked: (Item) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Item) {
-            binding.itemName.text = item.english
-            binding.itemPrice.text = item.chinese
-            binding.itemQuantity.text = item.isFavorite.toString()
+            binding.itemCountry.text=item.Country
+            binding.itemCapital.text = item.Capital
         }
     }
 
@@ -65,7 +64,7 @@ class ItemListAdapter(private val onItemClicked: (Item) -> Unit) :
             }
 
             override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-                return oldItem.english == newItem.english
+                return oldItem.Country == newItem.Country
             }
         }
     }
