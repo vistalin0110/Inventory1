@@ -1,0 +1,41 @@
+<!--
+  ~ Copyright (C) 2021 The Android Open Source Project.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources>
+    <string name="app_name">Vocabulary List</string>
+    <string name="sell">Sell</string>
+    <string name="button">NOTIFICATION!</string>
+    <string name="button2">LOCATION!</string>
+    <string name="quantity">Is Favorite? (0=No,1=Yes):</string>
+    <string name="quantity_req">Is Favorite Or Not <font color='#FF0000'>*</font></string>
+    <string name="eng_req">English <font color='#FF0000'>*</font></string>
+    <string name="chn_req">Chinese <font color='#FF0000'>*</font></string>
+    <string name="fav_req">Favorite setting (0=No,1=Yes) <font color='#FF0000'>*</font></string>
+    <string name="save_action">Save</string>
+    <string name="item_detail_fragment_title">Vocabulary Details</string>
+    <string name="add_fragment_title">Add New Word</string>
+    <string name="edit_fragment_title">Edit Item</string>
+    <string name="price">Price</string>
+    <string name="fav">Favorite</string>
+    <string name="chn">Chinese</string>
+    <string name="eng">English</string>
+    <string name="delete">Delete</string>
+    <string name="delete_question">Are you sure you want to delete?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="currency_symbol">$</string>
+    <string name="edit_item">Edit Item</string>
+    <string name="add_new_item">Add new item</string>
+</resources>
