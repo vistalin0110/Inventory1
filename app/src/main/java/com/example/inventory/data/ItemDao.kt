@@ -51,15 +51,24 @@ interface ItemDao {
     @Query("DELETE FROM item WHERE id=:id")
     fun delete2(id: Long): Int
 
+    @Query(value = "DELETE FROM item")
+    fun deleteAll(): Int
+
+    @Query("DELETE FROM item WHERE id = :id")
+    fun deleteById(id: Long): Int
+
     @Query("SELECT * FROM item")
-    fun getallItem(): Cursor
+    fun getallItem(): Cursor?
 
     @Query("SELECT * FROM item WHERE id = :id")
     fun getById(id: Long): Cursor
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert2(item: Item)
+    fun insert2(item: Item): Long
 
     @Update
     fun update2(item: Item): Int
+
+    @Query("SELECT * FROM item WHERE id = :id")
+    fun selectById(id: Long): Cursor
 }

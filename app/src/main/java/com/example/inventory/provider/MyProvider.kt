@@ -5,13 +5,13 @@ import android.content.ContentUris
 import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
 import android.util.Log
 import com.example.inventory.data.Item
 import com.example.inventory.data.ItemDao
 import com.example.inventory.data.ItemRoomDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 
 
 class MyProvider : ContentProvider() {
@@ -20,11 +20,15 @@ class MyProvider : ContentProvider() {
         val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
         const val AUTHORITY = "com.example.inventory"
-        val URL ="content://$AUTHORITY/person_info"
-        val CONTENT_URI = Uri.parse(URL)
+        val URL ="content://$AUTHORITY"
+        val BASE_CONTENT_URI = Uri.parse(URL)
         const val PERSON_TABLE_NAME = "person_info"
         const val ID_PERSON_DATA = 1
         const val ID_PERSON_DATA_ITEM = 2
+        val CONTENT_URI: Uri? =Uri.withAppendedPath(MyProvider.BASE_CONTENT_URI,MyProvider.PERSON_TABLE_NAME)
+        val _ID ="_id"
+        val Country ="Country"
+        val Capital ="Capital"
     }
 
     init {
@@ -33,30 +37,28 @@ class MyProvider : ContentProvider() {
     }
 
     private lateinit var itemDao: ItemDao
-    override fun insert(uri: Uri, values: ContentValues?): Uri? {
-        when (uriMatcher.match(uri)) {
-            ID_PERSON_DATA -> {
-                if (context != null) {
-                      var id: Long = itemDao.insert2(Item.fromContentValues(values!!)) as Long
-                        if (id as Int != 0) {
-                        context?.contentResolver?.notifyChange(uri, null)
-                        return ContentUris.withAppendedId(uri, id)
-                    }
-                    throw IllegalArgumentException("Failed")
 
+    override fun onCreate(): Boolean {
+        Log.d("TAG", (context == null).toString())
+        context
+        val applicationDatabase = ItemRoomDatabase.getDatabase(context!!)
+        itemDao = applicationDatabase?.itemDao()!!
+        return true
+    }
+
+
+    override fun insert(uri: Uri, contentValues: ContentValues?): Uri? =
+        context?.let {
+            when (uriMatcher.match(uri)) {
+                ID_PERSON_DATA -> {
+                    val id = itemDao.insert2(Item.fromContentValues(contentValues!!))
+                    it.contentResolver.notifyChange(uri, null)
+                    return@let ContentUris.withAppendedId(uri, id)
                 }
-                throw IllegalArgumentException("Failed")
-            }
-
-            ID_PERSON_DATA_ITEM -> {
-                throw IllegalArgumentException("Failed")
-            }
-
-            else -> {
-                throw IllegalArgumentException("Failed")
+                ID_PERSON_DATA_ITEM -> throw IllegalArgumentException("Invalid Uri, can not insert with ID: $uri")
+                else -> throw IllegalArgumentException("Unknown Uri: $uri")
             }
         }
-    }
 
 
     override fun query(
@@ -65,77 +67,61 @@ class MyProvider : ContentProvider() {
         selection: String?,
         selectionArgs: Array<out String>?,
         sortOrder: String?
-    ): Cursor? {
-        var cursor: Cursor
-        when (uriMatcher.match(uri)) {
-            ID_PERSON_DATA -> {
-                cursor = itemDao.getallItem()
-                if (context != null) {
-                    cursor.setNotificationUri(context?.contentResolver, uri)
-                    return cursor
-                }
-                throw IllegalArgumentException("Failed")
-
-            }
-            else -> {
-                throw IllegalArgumentException("Failed")
+    ): Cursor? =
+        context?.let {
+            when (uriMatcher.match(uri)) {
+                ID_PERSON_DATA -> itemDao.getallItem()
+                ID_PERSON_DATA_ITEM -> itemDao.selectById(ContentUris.parseId(uri))
+                else -> throw IllegalArgumentException("Unknown Uri: $uri")
             }
         }
-    }
 
-    override fun onCreate(): Boolean {
-        Log.d("TAG", (context == null).toString())
-        context
-        val applicationDatabase = ItemRoomDatabase.getDatabase(context!!)
-        itemDao = applicationDatabase?.itemDao()!!
-        return false
-    }
+
 
     override fun update(
-        uri: Uri,
-        values: ContentValues?,
-        selection: String?,
-        selectionArgs: Array<out String>?
-    ): Int {
-        when (uriMatcher.match(uri)) {
-            ID_PERSON_DATA -> {
-                if (context != null) {
-                    var count: Int = itemDao.update2(Item.fromContentValues(values!!)) as Int
-                    if (count as Int != 0) {
-                        context?.contentResolver?.notifyChange(uri, null)
-                        return count
-                    }
+        uri: Uri, value: ContentValues?, selection: String?, selectionArgs: Array<out String>?
+    ): Int =
+        if (context != null) {
+            when (uriMatcher.match(uri)) {
+                ID_PERSON_DATA_ITEM -> throw IllegalArgumentException("Invalid Uri, cannot update without id: $uri")
+                ID_PERSON_DATA -> {
+                    val item =Item.fromContentValues(value!!)
+                    //item.id = ContentUris.parseId(uri).toInt()
+                    item.id = uri.pathSegments.get(1).toInt()
+                    print(item.id)
+                    print(item.Capital)
+                    print(item.Country)
+                    val count = itemDao.update2(item)
+                    context!!.contentResolver.notifyChange(uri, null)
+                    count
                 }
-                throw IllegalArgumentException("Unknown URI:$uri")
+                else -> throw IllegalArgumentException("Unknown Uri: $uri")
             }
-
-            ID_PERSON_DATA_ITEM -> {
-                throw IllegalArgumentException("UPDATE Failed")
-            }
-
-            else -> {
-                throw IllegalArgumentException("Failed:$uri")
-
-            }
+        } else {
+            0
         }
-    }
 
-    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int {
-        when (uriMatcher.match(uri)) {
-            ID_PERSON_DATA -> throw IllegalArgumentException("CANNOT DELETE")
-            ID_PERSON_DATA_ITEM -> {
-                if (context != null) {
-                    var count = itemDao.delete2(ContentUris.parseId(uri))
-                    context?.contentResolver?.notifyChange(uri, null)
-                    return count
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int =
+        if (context != null) {
+            when (uriMatcher.match(uri)) {
+                ID_PERSON_DATA -> itemDao.deleteAll()// throw IllegalArgumentException("Invalid Uri, cannot delete with uri: $uri")
+                ID_PERSON_DATA_ITEM -> {
+                    val count = itemDao
+                        // ContentUris.parseId(): Convert the last path segment to a long; -1 if the path is empty
+                        .deleteById(ContentUris.parseId(uri))
+                    context!!.contentResolver.notifyChange(uri, null)
+                    count
                 }
-                throw IllegalArgumentException("Unknown URI:$uri")
+                else -> throw IllegalArgumentException("Unknown Uri: $uri")
             }
-            else -> throw IllegalArgumentException("Failed")
+        } else {
+            0
         }
-    }
 
-    override fun getType(uri: Uri): String? {
-        return null
-    }
+    override fun getType(uri: Uri): String =
+        when (uriMatcher.match(uri)) {
+            ID_PERSON_DATA -> "vnd.android.cursor.dir/$AUTHORITY.person_info"
+            ID_PERSON_DATA_ITEM -> "vnd.android.cursor.item/$AUTHORITY.person_info"
+            else -> throw IllegalArgumentException("Unknown URI: $uri")
+        }
 }

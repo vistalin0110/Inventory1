@@ -42,9 +42,11 @@ data class Item(
             var item = Item()
             if (contentValues.containsKey(ITEM_ID)) {
                 item.id = contentValues.getAsInteger(ITEM_ID)
-            } else if (contentValues.containsKey(ITEM_COUNTRY)) {
+            } ;
+            if (contentValues.containsKey(ITEM_COUNTRY)) {
                 item.Country = contentValues.getAsString(ITEM_COUNTRY)
-            } else if (contentValues.containsKey(ITEM_CAPITAL)) {
+            } ;
+            if (contentValues.containsKey(ITEM_CAPITAL)) {
                 item.Capital = contentValues.getAsString(ITEM_CAPITAL)
             }
             return item
