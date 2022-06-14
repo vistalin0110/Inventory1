@@ -57,7 +57,7 @@ interface ItemDao {
     @Query("DELETE FROM item WHERE id = :id")
     fun deleteById(id: Long): Int
 
-    @Query("SELECT * FROM item")
+    @Query("SELECT * FROM item ")
     fun getallItem(): Cursor?
 
     @Query("SELECT * FROM item WHERE id = :id")
@@ -68,6 +68,7 @@ interface ItemDao {
 
     @Update
     fun update2(item: Item): Int
+
 
     @Query("SELECT * FROM item WHERE id = :id")
     fun selectById(id: Long): Cursor
