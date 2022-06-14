@@ -83,14 +83,11 @@ class MyProvider : ContentProvider() {
     ): Int =
         if (context != null) {
             when (uriMatcher.match(uri)) {
-                ID_PERSON_DATA_ITEM -> throw IllegalArgumentException("Invalid Uri, cannot update without id: $uri")
-                ID_PERSON_DATA -> {
+                ID_PERSON_DATA-> throw IllegalArgumentException("Invalid Uri, cannot update without id: $uri")
+                ID_PERSON_DATA_ITEM  -> {
                     val item =Item.fromContentValues(value!!)
                     //item.id = ContentUris.parseId(uri).toInt()
                     item.id = uri.pathSegments.get(1).toInt()
-                    print(item.id)
-                    print(item.Capital)
-                    print(item.Country)
                     val count = itemDao.update2(item)
                     context!!.contentResolver.notifyChange(uri, null)
                     count

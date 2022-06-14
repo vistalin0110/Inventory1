@@ -78,12 +78,5 @@ class ItemListFragment : Fragment() {
             )
             this.findNavController().navigate(action)
         }
-        binding.favButton.setOnClickListener {
-            (activity as MainActivity).sendNotification()
-
-        }
-        binding.favButton2.setOnClickListener {
-            (activity as MainActivity).checkLocationPremission()
-        }
     }
 }
